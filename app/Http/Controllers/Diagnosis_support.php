@@ -23,7 +23,8 @@ class Diagnosis_support extends Controller
         $diagnosis=DB::table('patient_diagnosis')
         ->join('users','patient_diagnosis.user_id', '=', 'users.id')->where('patient_diagnosis.diagnosis_status',2)
         ->orWhere('patient_diagnosis.diagnosis_status','0')
-        ->select('users.*','patient_diagnosis.id AS diagnosis_id','patient_diagnosis.appointment_time','patient_diagnosis.diagnosis_status','patient_diagnosis.user_id')->get();
+        ->select('users.*','patient_diagnosis.id AS diagnosis_id','patient_diagnosis.appointment_time',
+        'patient_diagnosis.diagnosis_status','patient_diagnosis.user_id','patient_diagnosis.pqt_summary_id')->get();
 
         $attended=DB::table('patient_diagnosis')
         ->join('users','patient_diagnosis.user_id','=', 'users.id')

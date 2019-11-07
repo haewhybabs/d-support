@@ -30,7 +30,7 @@
                             <td>{{ $diagnose->username }}</td>
                             <td>{{ $diagnose->appointment_time }}</td>
                             <td>RF0{{ $diagnose->user_id }}0105</td>
-                            <td><a href="#" class="btn btn-warning btn-xs">View</a></td>
+                            <td><a href="{{ URL::to('view_result') }}/{{ $diagnose->pqt_summary_id }}" class="btn btn-warning btn-xs">View</a></td>
                             <td>
                                 @if($diagnose->diagnosis_status==2)
                                     <p>Diagnosis Initiated</p>

@@ -7,7 +7,11 @@
 
         <div class="col-md-6 col-lg-6">
             <div class="box box-default">
-                <img class="card-img-top img-responsive" src="{{ asset('admin/images/card/img1.jpg')}}" alt="Card image cap">
+                @if($data['new_test']->image==null)
+                    <img class="card-img-top img-responsive" src="{{ asset('admin/images/card/img1.jpg')}}" alt="Card image cap">
+                @else
+                    <img class="card-img-top img-responsive" src="{{ asset('images')}}/{{ $data['new_test']->image }}" alt="Card image cap">
+                @endif
                 <div class="box-body">
                     <h4 class="card-title">{{ $data['new_test']->sub_test_name }} <span class="head-span">on {{ $data['new_test']->head_test_name }}</span></h4>
                     @if($data['final_status']==true)

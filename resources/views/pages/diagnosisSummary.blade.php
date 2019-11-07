@@ -18,6 +18,7 @@
                         <tr>
                             <th>S/N</th>
                             <th>status</th>
+                            <th>Date</th>
                             <th>Result</th>
 
                         </tr>
@@ -29,8 +30,9 @@
                         <tr>
                             <td>{{ $x }}</td>
                             <td>initiated</td>
+                            <td>{{ $detail->created_date}}</td>
                             <td>
-                                View Result
+                                <a href="{{ URL::to('view_result') }}/{{ $detail->id }}" class="btn btn-info">View</a>
                             </td>
                         </tr>
                         <?php $x++;?>

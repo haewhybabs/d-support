@@ -56,31 +56,41 @@ class Preliminary_diagnosis extends Controller
 
         $question = $request->input('question');
         $options= $request->input('options');
+        if($options ==false){
+            $allowOption=0;
+        }
+        else{
+            $allowOption=1;
+        }
 
         if(trim($request->input('label'))==null){
             $data=array(
-                'question'=>$question
+                'question'=>$question,
+                'allow_option'=>$allowOption,
             );
             DB::table('diagnosis_questions')->insert($data);
         }
         else{
             $data=array(
                 'question'=>$question,
-                'label'=>$request->input('label')
+                'label'=>$request->input('label'),
+                'allow_option'=>$allowOption,
             );
             DB::table('diagnosis_questions')->insert($data);
         }
 
         $questionID=DB::table('diagnosis_questions')->orderBy('id','desc')->first();
 
-        for($i=0; $i<count($options); $i++){
+        if($options != false){
+            for($i=0; $i<count($options); $i++){
 
-            $data=array(
-                'diagnosis_question_id'=>$questionID->id,
-                'outcome'=>$options[$i]
-            );
+                $data=array(
+                    'diagnosis_question_id'=>$questionID->id,
+                    'outcome'=>$options[$i]
+                );
 
-            DB::table('diagnosis_question_outcome')->insert($data);
+                DB::table('diagnosis_question_outcome')->insert($data);
+            }
         }
 
         return redirect('diagnosis_question')->with('message', 'diagnoses question added succesfully');
@@ -182,7 +192,7 @@ class Preliminary_diagnosis extends Controller
             'expected_outcome'=>$optionID,
 
         );
-        DB::table('diagnosis_requirement_exception')->insert($data);
+        DB::table('diagnosis_exception_requirement')->insert($data);
         return redirect('add_requirement_exception')->with('message', 'diagnoses requirement exception added succesfully');
     }
 }

@@ -25,3 +25,10 @@
 .number{
     margin-right:5px;
 }
+.option{
+    font-size:15px;
+    color:green;
+}
+.result{
+    color:green
+}

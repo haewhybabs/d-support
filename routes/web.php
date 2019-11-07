@@ -49,4 +49,4 @@ Route::post('add_requirement_exception_action','Preliminary_diagnosis@add_requir
 Route::get('patient_test','Diagnosis_question@patient_test')->name('patient_test');
 Route::get('lbp_diagnosis','Diagnosis_question@lbp_diagnosis')->name('lbp_diagnosis');
 Route::post('lbp_diagnosis_action','Diagnosis_question@lbp_diagnosis_action')->name('lbp_diagnosis_action');
-
+Route::get('view_result/{id}','Diagnosis_question@viewResult');

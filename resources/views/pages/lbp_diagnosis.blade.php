@@ -22,20 +22,33 @@
                                 <p class="question">
                                     {{ $question->question }}
                                     <input type="hidden" name="question_id[]" value="{{ $question->id }}">
+
                                 </p>
                             </div>
                         </div>
 
                     </div>
                     <?php $options=DB::table('diagnosis_question_outcome')->where('diagnosis_question_id',$question->id)->get();?>
-                    @foreach($options as $option)
-                    <div class="form-group">
-                        <div class="radio">
-                            <input name="option[{{ $x }}]" type="radio" id="Option_{{ $option->id }}" value="{{ $option->id }}">
-                            <label for="Option_{{ $option->id }}">{{ $option->outcome }}</label>
+                    @if($question->allow_option ==1)
+                        @foreach($options as $option)
+
+                        <div class="form-group">
+                            <div class="radio">
+                                <input name="option[{{ $x }}]" type="radio" id="Option_{{ $option->id }}" value="{{ $option->id }}">
+                                <label for="Option_{{ $option->id }}">{{ $option->outcome }}</label>
+                            </div>
                         </div>
-                    </div>
-                    @endforeach
+                        {{-- <input type="hidden" name="response[]" value="{{ $option->outcome }}"> --}}
+                        @endforeach
+                    @else
+                        <div class ="form-group row">
+                            <div class="col-sm-8">
+                                <input type="hidden" name="questionResponse[]" value="{{ $question->id }}">
+                                <textarea name="response[]" class="form-control" row="3"></textarea>
+                            </div>
+
+                        </div>
+                    @endif
                     <?php $x++;?>
                     @endforeach
                     <div class="text-center">
