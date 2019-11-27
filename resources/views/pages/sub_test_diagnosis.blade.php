@@ -4,7 +4,6 @@
     <h2 class="card-title">{{ $data['new_test']->sub_test_name }}</h2>
 
     <div class="row">
-
         <div class="col-md-6 col-lg-6">
             <div class="box box-default">
                 @if($data['new_test']->image==null)
@@ -17,7 +16,12 @@
                     @if($data['final_status']==true)
                         <h5><strong>Final Diagnosis</strong></h5>
                     @endif
-                    <div class="card-text"> {{ $data['new_test']->detail }}</div>
+                    <div class="card-text">
+                        <textarea class="textarea" placeholder="Place some text here"
+                                style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" name="detail">
+                            {{ $data['new_test']->detail }}
+                        </textarea>
+                    </div>
 
                     <div class="row">
                         <div class="col-sm-3">
@@ -30,9 +34,12 @@
                                 <input type="hidden"  name="sub_test_id" value="{{ $data['new_test']->sub_test_id }}">
                                 <input type="hidden"  name="status" value="1">
                                 <input type="hidden" name="summary_id" value="{{ $diagnosis_summary->summary_id }}">
-                                <input type="hidden" name="stage" value="{{ $diagnosis_summary->stage }}">
+                                <input type="hidden" name="stage" value="{{ $data['stage']}}">
                                 <input type="hidden" name="diagnosis_id" value="{{$diagnosis_id }}">
-                                <input type="submit" value="Postivie" class="btn btn-success">
+                                @if($data['final_status']==true)
+                                @else
+                                <input type="submit" value="Positive" class="btn btn-primary">
+                                @endif
                             </form>
                         </div>
                         <div class="col-sm-3">
@@ -45,13 +52,14 @@
                                 <input type="hidden"  name="sub_test_id" value="{{ $data['new_test']->sub_test_id }}">
                                 <input type="hidden"  name="status" value="0">
                                 <input type="hidden" name="summary_id" value="{{ $diagnosis_summary->summary_id }}">
-                                <input type="hidden" name="stage" value="{{ $diagnosis_summary->stage }}">
+                                <input type="hidden" name="stage" value="{{ $data['stage'] }}">
                                 <input type="hidden" name="diagnosis_id" value="{{$diagnosis_id }}">
-                                <input type="submit" value="Negative" class="btn btn-danger">
-
+                                @if($data['final_status']==true)
+                                @else
+                                    <input type="submit" value="Negative" class="btn btn-danger">
+                                @endif
                             </form>
                         </div>
-
                     </div>
                 </div>
                 <!-- /.box-body -->
@@ -98,16 +106,10 @@
 
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
-
-
         <!-- /.col -->
-
     </div>
-
-
 </div>
 @endsection

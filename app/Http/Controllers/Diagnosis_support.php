@@ -24,7 +24,7 @@ class Diagnosis_support extends Controller
         ->join('users','patient_diagnosis.user_id', '=', 'users.id')->where('patient_diagnosis.diagnosis_status',2)
         ->orWhere('patient_diagnosis.diagnosis_status','0')
         ->select('users.*','patient_diagnosis.id AS diagnosis_id','patient_diagnosis.appointment_time',
-        'patient_diagnosis.diagnosis_status','patient_diagnosis.user_id','patient_diagnosis.pqt_summary_id')->get();
+        'patient_diagnosis.diagnosis_status','patient_diagnosis.user_id','patient_diagnosis.pqt_summary_id','patient_diagnosis.created_at')->get();
 
         $attended=DB::table('patient_diagnosis')
         ->join('users','patient_diagnosis.user_id','=', 'users.id')
@@ -41,9 +41,9 @@ class Diagnosis_support extends Controller
 
 
 
-       return view('pages.patient_diagnosis')->with($data);
+      return view('pages.patient_diagnosis')->with($data);
 
-       //var_dump($data['diagnosis']);
+    //    var_dump($data['diagnosis']);
     //    foreach($diagnosis as $d){
     //        echo $d->diagnosis_id;
     //    }
@@ -101,9 +101,11 @@ class Diagnosis_support extends Controller
     public function sub_test_flow($id){
 
         $diagnosis_summary=DB::table('patient_test_summary')->where('diagnosis_id',$id)->first();
+
         $latest_diagnosis_detail=DB::table('patient_test_detail')
         ->where('summary_id',$diagnosis_summary->summary_id)->orderBy('detail_id','desc')
         ->first();
+
 
         $all_detail=DB::table('patient_test_detail')
         ->join('sub_test_tbl','patient_test_detail.sub_test_id', '=', 'sub_test_tbl.sub_test_id')
@@ -115,8 +117,9 @@ class Diagnosis_support extends Controller
         $stage=$diagnosis_summary->stage+1;
         $depending=$latest_diagnosis_detail->sub_test_id;
         $status=$latest_diagnosis_detail->status;
+        // print_r($stage.$depending.$status);
 
-        $next_test=$this->workflow($stage,$depending,$status);
+        $next_test=$this->workflow($stage,$depending,$status,$id);
 
         $data=array(
             'data'=>$next_test,
@@ -148,6 +151,7 @@ class Diagnosis_support extends Controller
         $status=$request->input('status');
 
 
+
         $detail=array(
             'summary_id'=>$summary_id,
             'sub_test_id'=>$sub_test_id,
@@ -161,6 +165,52 @@ class Diagnosis_support extends Controller
 
         return redirect()->back()->with('success', 'disease diagnoses result succesful');
 
+
+
+    }
+
+    public function workflow($stage,$depending,$status,$id){
+
+        $current_test=DB::table('test_flow_tbl')->where('stage',$stage)->where('sub_test_depending_id',$depending)
+        ->where('previous_status',$status)->first();
+
+        $new_sub_test=$current_test->sub_test_id;
+
+        if($current_test->sub_test_id==16){
+            $new_sub_test=1;
+            $stage=-1;
+
+        }
+        elseif($current_test->sub_test_id==12){
+            $new_sub_test=2;
+            $stage=-1;
+        }
+        elseif($current_test->sub_test_id==19){
+            $new_sub_test=1;
+            $stage=-1;
+        }
+        else{
+            $stage=$stage-1;
+        }
+        $get_test=DB::table('sub_test_tbl')
+        ->join('head_test_tbl','sub_test_tbl.head_test_id','=','head_test_tbl.id')
+        ->select('sub_test_tbl.*','head_test_tbl.*')
+        ->where('sub_test_tbl.sub_test_id',$new_sub_test)->first();
+
+        if($current_test->final_diagnosis==1){
+            $final_status=true;
+        }
+        else{
+            $final_status=false;
+        }
+
+        $data=array(
+            'new_test'=>$get_test,
+            'final_status'=>$final_status,
+            'stage'=>$stage,
+        );
+
+        return $data;
 
 
     }
@@ -207,31 +257,6 @@ class Diagnosis_support extends Controller
 
     }
 
-    public function workflow($stage,$depending,$status){
-
-        $current_test=DB::table('test_flow_tbl')->where('stage',$stage)->where('sub_test_depending_id',$depending)
-        ->where('previous_status',$status)->first();
-        $get_test=DB::table('sub_test_tbl')
-        ->join('head_test_tbl','sub_test_tbl.head_test_id','=','head_test_tbl.id')
-        ->select('sub_test_tbl.*','head_test_tbl.*')
-        ->where('sub_test_tbl.sub_test_id',$current_test->sub_test_id)->first();
-
-        if($current_test->final_diagnosis==1){
-            $final_status=true;
-        }
-        else{
-            $final_status=false;
-        }
-
-        $data=array(
-            'new_test'=>$get_test,
-            'final_status'=>$final_status,
-        );
-
-        return $data;
-
-
-    }
 
     public function dsettings(){
         $all_test=DB::table('sub_test_tbl')->get();

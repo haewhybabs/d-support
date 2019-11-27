@@ -21,6 +21,7 @@
                             <th>Patient_Reference</th>
                             <th>Diagnosis Questions</th>
                             <th>Status</th>
+                            <th>Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -29,7 +30,7 @@
                         <tr>
                             <td>{{ $diagnose->username }}</td>
                             <td>{{ $diagnose->appointment_time }}</td>
-                            <td>RF0{{ $diagnose->user_id }}0105</td>
+                            <td>RF0{{ $diagnose->user_id }}{{$diagnose->pqt_summary_id}}</td>
                             <td><a href="{{ URL::to('view_result') }}/{{ $diagnose->pqt_summary_id }}" class="btn btn-warning btn-xs">View</a></td>
                             <td>
                                 @if($diagnose->diagnosis_status==2)
@@ -40,6 +41,7 @@
                                     <p>Not Yet Initiated</p>
                                 @endif
                             </td>
+                            <td>{{$diagnose->created_at}}</td>
                             <td>
                                 @if($diagnose->diagnosis_status==2)
                                     <a href="{{ URL::to('sub_test_flow')}}/{{ $diagnose->diagnosis_id }}" class="btn btn-info btn-xs">Diagnosis Test</a>
