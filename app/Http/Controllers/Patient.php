@@ -29,7 +29,7 @@ class Patient extends Controller
 
 
         $length=10;
-        $password= $this->generateRandomString($length);
+        $password= $request->input('password');
         $email=$request->input('email');
         $username=$request->input('username');
 
@@ -52,19 +52,7 @@ class Patient extends Controller
         $to_email =$email;
         $data_mail = array('name'=>$username, 'password'=> $password);
 
-        Mail::send('emails.mail', $data_mail,
-
-            function($message) use ($to_name, $to_email) {
-
-            $message->to($to_email, $to_name)
-            ->subject('D-Support Account Authentication')
-            ->from('babalolaisaac@gmail.com','D-Support');
-
-
-        });
-
         //Audit Tray
-
         user_model::insert($data);
         $request->session()->flash('message', $request->input('username'). ' is successfully created.');
         return redirect('add_patient');

@@ -56,7 +56,7 @@ class User extends Controller
 
     public function logout(){
         $task="Logged Out";
-        $this->audit($task);
+        // $this->audit($task);
         Auth::logout();
         return redirect('login');
     }

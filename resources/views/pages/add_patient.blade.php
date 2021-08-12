@@ -21,6 +21,10 @@
                             <label for="exampleInputEmail1">Email</label>
                             <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" name="email">
                         </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword">Password</label>
+                            <input type="password" class="form-control" id="exampleInputEmail1" placeholder="Enter password" name="password">
+                        </div>
 
                         {{-- <div class="form-group">
                             <label for="exampleInputFile">File input</label>
